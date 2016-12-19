@@ -16,15 +16,11 @@ class jenkins ()
                 command => 'wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -',
         }
 
-        exec { 'update source list' :
-                command => 'sh -c "echo deb /opt/jenkins_2.1_all.deb > /etc/apt/sources.list.d/jenkins.list"',
-        }
-
         package { 'jenkins':
                 provider => dpkg,
                 ensure => installed,
                 source => "/opt/jenkins_2.1_all.deb",
-                require => Exec['update source list']
+                require => Exec['add key']
         }
 
         service { 'jenkins':
