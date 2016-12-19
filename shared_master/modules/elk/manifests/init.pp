@@ -1,6 +1,6 @@
 class elk(
 	$elasticsearch_archive ="elasticsearch-5.1.1.deb",
-	$kibana_archive = "kibana-5.1.1-linux-x86_64.tar.gz",
+	$kibana_archive = "kibana-5.1.1-amd64.deb",
 	$logstash_archive = "logstash-5.1.1.tar.gz"
 	)
 	{
@@ -29,7 +29,7 @@ class elk(
 		ensure => installed, 
 		provider => 'dpkg',
 		source => "/opt/${elasticsearch_archive}",
-		require => File["/opt/${elasticsearch_archive}"],
+		require => Exec["get debian key"],
 	}
 
 	exec{'update elasticstack':
@@ -41,4 +41,33 @@ class elk(
 		command => "sudo -i service elasticsearch start",
 		require => Exec['update elasticsearch'],
 	}
+
+	#Install Kibana
+	file {"/opt/${kibana_archive}":
+		ensure => "present",
+		#source => "/tmp/shared/elk/files/${kibana_archive}",
+		source => "puppet:///modules/elk/${kibana_archive}",
+		owner => vagrant,
+		mode => 755,
+	}
+
+	package{'install kibana':
+		ensure => installed, 
+		provider => 'dpkg',
+		source => "/opt/${kibana_archive}",
+		require => File["/opt/${kibana_archive}"],
+	}
+
+	exec{'update kibana':
+		command => "sudo update-rc.d kibana defaults 96 9",
+		require => Package['install kibana'],
+	}
+
+	exec{'start elasticsearch':
+		command => "sudo -i service kibana start",
+		require => Exec['update kibana'],
+	}
+
+	#Install Logstash
+	
 }
