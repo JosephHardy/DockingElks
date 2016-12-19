@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
         master.vm.box = "chad-thompson/ubuntu-trusty64-gui"
 		master.vm.synced_folder "shared_master", "/tmp/shared"
         master.vm.network :public_network, ip: masterIP
-        master.vm.provision :shell, path: "bootstrap_master.sh", env: {"masterIP" => masterIP, "masterDN" => masterDN, "agentDN" => agentDN}
+        master.vm.provision :shell, path: "bootstrap_master.sh", env: {"masterIP" => masterIP, "masterDN" => masterDN, "agentDN" => agentDN, "agentIP" => agentIP}
         master.vm.provider :virtualbox do |masterVM|
             masterVM.gui = true
             masterVM.name = "master"
@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
         agent.vm.box = "chad-thompson/ubuntu-trusty64-gui"
 		agent.vm.synced_folder "shared_agent", "/tmp/shared"
         agent.vm.network :public_network, ip: agentIP
-        agent.vm.provision :shell, path: "bootstrap_agent.sh", env: {"masterIP" => masterIP, "masterDN" => masterDN}
+        agent.vm.provision :shell, path: "bootstrap_agent.sh", env: {"masterIP" => masterIP, "masterDN" => masterDN, "agentDN" => agentDN, "agentIP" => agentIP}
         agent.vm.provider :virtualbox do |agentVM|
             agentVM.gui = true
             agentVM.name = "agent1"
