@@ -11,87 +11,108 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 
 #INSTALL SNORT START
 	#INSTALL DEPENDENCIES
+	#ensure folder exits
+	file { '/opt/snort/' : 
+		ensure	=> directory,
+		before	=> Package['ethtool']
+	}
+	
 	package { 'ethtool' : 
-		ensure => present,
+		ensure 	=> present,
+		require	=> File['/opt/snort'],
+		before	=> Package['build-essential'],
 	}
 
 	package { 'build-essential' : 
 		ensure 	=> present,
 		require => Package['ethtool'],
+		before	=> Package['libpcap-dev'],
 	}
 
 	package { 'libpcap-dev' : 
 		ensure 	=> present,
 		require => Package['build-essential'],
+		before	=> Package['libpcre3-dev'],
 	}
 
 	package { 'libpcre3-dev' : 
 		ensure 	=> present,
 		require => Package['libpcap-dev'],
+		before	=> Package['libdumbnet-dev'],
 	}
 
 	package { 'libdumbnet-dev' : 
 		ensure 	=> present,
 		require => Package['libpcre3-dev'],
+		before	=> Package['bison'],
 	}
 
 	package { 'bison' : 
 		ensure 	=> present,
 		require => Package['libdumbnet-dev'],
+		before	=> Package['flex'],
 	}
 
 	package { 'flex' : 
 		ensure 	=> present,
 		require => Package['bison'],
+		before	=> Package['zlib1g-dev'],
 	}
 
 	package { 'zlib1g-dev' : 
 		ensure  => present,
 		require => Package['flex'],
+		before	=> Package['liblzma-dev'],
 	}
 
 	package { 'liblzma-dev' : 
 		ensure 	=> present,
 		require => Package['zlib1g-dev'],
+		before	=> Package['openssl'],
 	}
 
 	package { 'openssl' : 
 		ensure 	=> present,
 		require => Package['liblzma-dev'],
+		before	=> Package['libssl-dev'],
 	}
 
 	package { 'libssl-dev' : 
 		ensure  => present,
 		require => Package['openssl'],
+		before	=> File["/opt/snort/${snort_archive}"],
 	}
 	#INSTALL DEPENDENCIES END
 
 #FOLDER START	
 	# EXTRACT ARCHIVE
-	file {'/opt/snort/${snort_archive}' : 
+	file { "/opt/snort/${snort_archive}" : 
 		ensure  => present,
 		source  => "puppet:///modules/snort/${snort_archive}",
-		require => Exec['libssl-dev'],
+		require => Package['libssl-dev'],
+		before	=> File["/opt/snort/${snort_daq}"]
 	}
 
-	file {"/opt/snort/${snort_snort_daq}" : 
+	file { "/opt/snort/${snort_daq}" : 
 		ensure  => present,
 		source  => "puppet:///modules/snort/${snort_daq}",
 		require => File["/opt/snort/${snort_archive}"],
+		before	=> Exec['extract_snort'],
 	}
 
 	exec { 'extract_snort' :
-		cwd	=> '/opt/snort',
+		cwd	=> '/opt/snort/',
 		command	=> "sudo tar zxvf ${snort_archive}",
 		require	=> File["/opt/snort/${snort_snort_daq}"],
+		before	=> Exec['extract_snort_daq'],
 	}
 
 	exec { 'extract_snort_daq' :
-		cwd	=> '/opt/snort',
+		cwd	=> '/opt/snort/',
 		command	=> "sudo tar zxvf ${snort_daq}",
 		require	=> Exec['extract_snort'],
+		before	=> Exec['disable_eth_feature1'],
 	}
-
 	# EXTRACT END
 #FOLDER END
 
@@ -113,13 +134,15 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 		cwd		=> "/opt/snort/${snort_daq_fol}",
 		command	=> "sudo bash -c '/opt/snort/${snort_daq_fol}/configure && make && make install'",
 		require	=> Exec['disable_eth_feature2'],
+		#user 	=> "root",
 	}
 
 	#COMPILE SNORT AND INSTALL
 	exec { 'install_snort' : 
 		cwd		=> "/opt/snort/${snort_folder}",
-		command	=> "sudo bash -c '/opt/snort/${snort_daq_fol}/configure --enable-sourcefire && make && make install'",
+		command	=> "sudo bash -c '/opt/snort/${snort_folder}/configure --enable-sourcefire && make && make install'",
 		require	=> Exec['install_daq'],
+		#user 	=> "root",
 	}
 	#INTALL END
 #INSTALL END END
@@ -155,18 +178,18 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 		source  => 'puppet:///modules/snort/mkdir.sh',
 		require	=> Exec['usr_snort'],
 	}
-	
+
 	#update shell script permissions
 	exec { 'mkdir_perm' : 
-		cwd		=> '/opt/snort'
+		cwd		=> '/opt/snort',
 		command	=> 'sudo chmod a+x /opt/snort/mkdir.sh',
 		require	=> File['/opt/snort/mkdir.sh'],
 	}
 
 	exec { 'snort_mkdir' : 
-		cwd		=> '/opt/snort'
-		command	=> 'sudo /opt/snort/mkdir.sh',
-		require	=> exec['mkdir_perm'],
+		cwd		=> '/opt/snort',
+		command	=> "sudo bash -c '/opt/snort/mkdir.sh'",
+		require	=> Exec['mkdir_perm'],
 	}
 
 	#CREATE FOLDERS END
@@ -220,19 +243,25 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 	#RENAME snort.init FILE
 	exec { "rename_config" : 
 		cwd		=> '/etc/init',
-		command	=> 'sudo chmod a+x /etc/init/snort.conf',
+		command	=> 'sudo mv ./snort.init ./snort.conf',
 		require	=> File['/etc/init/snort.init'],
 	}
 
-	#CHECK snort.conf EXECUTABLE
+	#UPDATE snort.conf Permissions
 	exec { "update_ex" : 
-		command	=> 'initctl list | grep snort'
+		command	=> 'sudo chmod a+x /etc/init/snort.conf',
 		require	=> Exec['rename_config'],
+	}
+
+	#CHECK snort.conf EXECUTABLE
+	exec { "check_ex" : 
+		command	=> 'initctl list | grep snort',
+		require	=> Exec['update_ex'],
 	}
 
 	#RESTART snort SERVICE
 	exec { 'restart_snort' : 
 		command	=> 'snort stop/waiting',
-		require	=> Exec['update_ex'],
+		require	=> Exec['check_ex'],
 	}
 }
