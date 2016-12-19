@@ -4,14 +4,13 @@ class nexus (
 	$nexus_folder = "nexus-3.0.2-02"
 	)
 	{
-#	require java
+	require java
 	Exec {
 		path => ["/usr/bin", "/bin", "/usr/sbin"]
 	}
 
 	file {"/opt/${nexus_archive}":
 		ensure => "present",
-		#source => "/tmp/shared/${nexus_archive}",
 		source => "puppet:///modules/nexus/${nexus_archive}",
 		owner => vagrant,
 		mode => 755,
