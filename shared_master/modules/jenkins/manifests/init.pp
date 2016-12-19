@@ -13,11 +13,11 @@ class jenkins ()
 
         exec { 'add key' :
                 cwd => '/opt',
-                command => 'wget -q -O - https://pkg.jenkins.io/debian/jenkins.$
+                command => 'wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -',
         }
 
         exec { 'update source list' :
-                command => 'sh -c "echo deb /opt/jenkins_2.1_all.deb > /etc/apt$
+                command => 'sh -c "echo deb /opt/jenkins_2.1_all.deb > /etc/apt/sources.list.d/jenkins.list"',
         }
 
         package { 'jenkins':
