@@ -1,15 +1,25 @@
-class jenkins ()
+class jenkins (
+	$jenkins_archive = "jenkins_2.1_all.deb",
+)
 
 {
-        require java
+        #require java
 
         Exec {
                 path => ["/usr/bin","/bin","/usr/sbin"]
         }
+	
+	file { "/opt/${jenkins_archive}":
+		ensure => present,
+		owner => vagrant,
+		mode => 755,
+		source => "/tmp/shared/jenkins/files/${jenkins_archive}",
+		#source => "puppet:///modules/jenkins/${jenkins_archive}",
+	}
 
-        exec { 'copy jenkins' :
-                command => 'sudo cp /tmp/shared/jenkins_2.1_all.deb /opt',
-        }
+#        exec { 'copy jenkins' :
+#                command => 'sudo cp /tmp/shared/jenkins_2.1_all.deb /opt',
+#        }
 
         exec { 'add key' :
                 cwd => '/opt',
