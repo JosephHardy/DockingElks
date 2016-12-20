@@ -50,32 +50,27 @@ class elk(
                 #source => "puppet:///modules/elk/${kibana_archive}",
                 owner => vagrant,
                 mode => 755,
+                require => Exec['start elasticsearch'],
         }
 
         exec{'unpack tar file':
                 cwd => "/opt",
                 command => "tar zxvf ${kibana_archive}",
                 require => File["/opt/${kibana_archive}"],
-		}
+        }
 
-        file{"/opt/run":
+        file{"/opt/run.sh":
                 ensure => "present",
-                source => "/tmp/shared/elk/files/run",
+                source => "/tmp/shared/elk/files/run.sh",
                 #source => "puppet:///modules/elk/${kibana_archive}",
                 owner => vagrant,
                 mode => 755,
-        }
-
-        exec{'chmod':
-                cwd => "/opt",
-                command => "sudo chmod 755 run",
-                require => File["/opt/run"],
+                require => Exec['unpack tar file'],
         }
 
         exec{'update kibana':
-                cwd => "/etc/puppet/modules/elk/files",
-                command => "sudo ./run",
-                require => Exec['chmod'],
+                command => "/opt/run.sh",
+                require => File['/opt/run.sh'],
         }
 
         exec{'start kibana':
@@ -84,9 +79,6 @@ class elk(
                 require => Exec['update kibana'],
         }
 
-}
-
-}
 #####
 #	#Install Logstash
 #	file {"/opt/${logstash_archive}":
