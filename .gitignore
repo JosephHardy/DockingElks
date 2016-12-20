@@ -1,2 +1,3 @@
 #Ignore all big files
 shared_master/binaries/*
+!placeholder.txt
