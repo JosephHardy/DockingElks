@@ -16,12 +16,12 @@ class java {
 
         exec { 'install java' :
                 require => Exec['extract java tar file'],
-                command => 'sudo update-alternatives --install /usr/bin/java ja$
+                command => 'sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_45/bin/java 100',
         }
 
         exec { 'install javac' :
                 require => Exec['extract java tar file'],
-                command => 'sudo update-alternatives --install /usr/bin/javac j$
+                command => 'sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_45/bin/javac 100',
         }
 }
 
