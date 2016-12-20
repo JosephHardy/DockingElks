@@ -68,7 +68,7 @@ exec {'Change Port':
  
 file {"/opt/tomcatscript.sh":
  ensure => 'present',
- source => "/tmp/shared/tomcatscript.sh",
+ source => "/etc/puppet/modules/tomcat/files/tomcatscript.sh",
  owner => vagrant,
  mode => 755,
  notify => Exec['run_script'],
