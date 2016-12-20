@@ -15,6 +15,6 @@ echo "Configuring the the default server to master fqdn .. "
 sed -i "2s/^/server=$masterDN\n/" /etc/puppet/puppet.conf
 
 echo "Testing and enabling the service .. "
-sudo puppet agent --test --server=jayde-master.qac.local
+sudo puppet agent --test --server=$masterDN
 sudo puppet agent --enable
-sudo puppet agent --test --server=jayde-master.qac.local
+sudo puppet agent --test --server=$masterDN
