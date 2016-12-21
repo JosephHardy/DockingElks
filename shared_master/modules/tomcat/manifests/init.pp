@@ -28,7 +28,7 @@ Exec {
 exec {'Extract Tomcat':
  cwd => '/opt',
  command => 'tar -xzvf apache-tomcat-7.0.73.tar.gz',
-  require => Exec['Copy Tomcat'],
+ require => File['/opt/apache-tomcat-7.0.73.tar.gz'],
 }
 
 #exec {'User Permissions':
@@ -67,17 +67,17 @@ exec {'Change Port':
  }
  
 file {"/opt/tomcatscript.sh":
- ensure => 'present',
- source => "/etc/puppet/modules/tomcat/files/tomcatscript.sh",
+ ensure => "present",
+ source => "puppet:///modules/tomcat/tomcatscript.sh",
  owner => vagrant,
  mode => 755,
- notify => Exec['run_script'],
+#notify => Exec['run_script'],
  require => Exec['Change Port'],
  }
  
 exec {'run_script':
  command => '/opt/tomcatscript.sh',
- require => File["/opt/tomcatscript.sh"]
+ require => File["/opt/tomcatscript.sh"],
 }
 
  

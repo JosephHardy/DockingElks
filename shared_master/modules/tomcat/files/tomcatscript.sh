@@ -13,5 +13,3 @@ sudo echo '<role rolename="manager-status"/>' >> /opt/apache-tomcat-7.0.73/conf/
 sudo echo '<user username="tomcatstatus" password="s3cret" roles="manager-status"/>' >> /opt/apache-tomcat-7.0.73/conf/tomcat-users.xml
 
 sudo echo '</tomcat-users>' >> /opt/apache-tomcat-7.0.73/conf/tomcat-users.xml
-
-
