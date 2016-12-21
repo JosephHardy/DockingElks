@@ -20,6 +20,8 @@
 
 3) Git bash within the DockingElks directory and run the command 'vagrant up'
 
+### Machines can all be loaded at once with 'vargant up'. Not advised as they take up 12GB Ram between them and really slow down the computer
+
 Can also launch individual machines by putting the name of the machine after the 'vagrant up' command. The machines are as follows:
     
     - elkAgent: includes java and elk stack. IP: 192.168.1.100
