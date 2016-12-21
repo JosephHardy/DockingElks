@@ -44,3 +44,5 @@ sudo cp /tmp/shared/binaries/packer_0.12.1_linux_amd64.zip /etc/puppet/modules/p
 sudo cp /tmp/shared/binaries/daq-2.0.6.tar.gz /etc/puppet/modules/snort/files
 sudo cp /tmp/shared/binaries/snort-2.9.9.0.tar.gz /etc/puppet/modules/snort/files
 sudo cp /tmp/shared/binaries/apache-tomcat-7.0.73.tar.gz /etc/puppet/modules/tomcat/files
+
+
