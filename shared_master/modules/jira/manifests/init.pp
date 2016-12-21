@@ -5,6 +5,8 @@ class jira(
 		path => [ "/usr/bin", "/bin", "/usr/sbin"],
 	}
 	
+	require java
+	
 	#MAKE JIRA DIRECTORY
 	file { '/opt/jira/' : 
 	ensure	=> 'directory',

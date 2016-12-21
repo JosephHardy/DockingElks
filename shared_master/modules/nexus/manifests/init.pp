@@ -4,7 +4,10 @@ class nexus (
 	$nexus_folder = "nexus-3.0.2-02"
 	)
 	{
-	require java
+	
+	require java,
+	require maven
+	
 	Exec {
 		path => ["/usr/bin", "/bin", "/usr/sbin"]
 	}

@@ -7,7 +7,8 @@ class elk(
     $elasticsearch = "es.sh"
     )
     {
-    require java
+    
+	require java
 
     Exec {
     	path => ["/usr/bin", "/bin", "/usr/sbin"]

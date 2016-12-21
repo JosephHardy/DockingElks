@@ -1,10 +1,9 @@
-
 class jenkins (
         $jenkins_archive = "jenkins_2.1_all.deb",
-)
-
-{
-        require java
+	)
+	{
+        require java,
+		require maven
 
         Exec {
                 path => ["/usr/bin","/bin","/usr/sbin"]
