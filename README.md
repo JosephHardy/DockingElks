@@ -1,8 +1,8 @@
 # DockingElks
 
-1. Clone git repository: https://github.com/JosephHardy/DockingElks
+1) Clone git repository: https://github.com/JosephHardy/DockingElks
 
-2. The following binary files should be added to the shared_master/binaries directory:
+2) The following binary files should be added to the shared_master/binaries directory:
 
 - apache-tomcat-7.0.73.tar.gz
 - daq-2.0.6.tar.gz
@@ -18,7 +18,7 @@
 - packer_0.12.1_linux_amd64.zip
 - snort-2.9.9.0.tar.gz
 
-3. Git bash within the DockingElks directory and run the command 'vagrant up'
+3) Git bash within the DockingElks directory and run the command 'vagrant up'
 
 
 
