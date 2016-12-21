@@ -1,5 +1,6 @@
 class tomcat {
 
+#Plucks the tomcat tar file from the tomcat/files directory and pops it into /opt
 file {'/opt/apache-tomcat-7.0.73.tar.gz':
  ensure => "present",
  source => "puppet:///modules/tomcat/apache-tomcat-7.0.73.tar.gz",
@@ -25,6 +26,8 @@ Exec {
 # before => Exec['Extract Tomcat'],
 #}
 
+
+#Extracts Tomcat tar files
 exec {'Extract Tomcat':
  cwd => '/opt',
  command => 'tar -xzvf apache-tomcat-7.0.73.tar.gz',
@@ -36,16 +39,19 @@ exec {'Extract Tomcat':
 # command => 'chgrp -R tomcat /opt/apache-tomcat-7.0.73',
 #}
 
+#Allow the tomcat file to be accessible
 exec {'Change Permissions':
  cwd => '/opt',
  command => 'chmod -R g+rx apache-tomcat-7.0.73',
  require => Exec['Extract Tomcat'],
 }
 
+#Update the Java Home
 exec {'Update Java Home':
  command => 'echo "export JAVA_HOME=/opt/jdk1.8.0_45" >> /etc/profile',
 }
 
+#Allow the executable file to be executable
 exec {'Allow execution':
  cwd => '/opt/apache-tomcat-7.0.73/bin/',
  command => 'chmod a+x startup.sh',
@@ -60,12 +66,15 @@ exec {'Allow execution':
 #  before => Exec['Start'],
 #}
 
+
+#Change the config file to edit the Port which tomcat listens on
 exec {'Change Port':
  #command => "echo sed -i 's|<Connector port=\"8080\"|<Connector port=\"8082\"|g' /opt/apache-tomcat-7.0.73/conf/server.xml"
  command => "sed -i 's:8080:8082:g' /opt/apache-tomcat-7.0.73/conf/server.xml",
  require => Exec['Allow execution'],
  }
  
+# Copy a shell script to /opt
 file {"/opt/tomcatscript.sh":
  ensure => "present",
  source => "puppet:///modules/tomcat/tomcatscript.sh",
@@ -75,12 +84,13 @@ file {"/opt/tomcatscript.sh":
  require => Exec['Change Port'],
  }
  
+ #Run a script which sets up the defult manager users in Tomcat (GUI, Status, Script and jmx)
 exec {'run_script':
  command => '/opt/tomcatscript.sh',
  require => File["/opt/tomcatscript.sh"],
 }
 
- 
+# Need to Restart Tomcat (incase we are re-running) to allow the config changes to occur
 exec {'Stop':
  cwd => '/opt/apache-tomcat-7.0.73/bin/',
  command => 'sudo ./shutdown.sh',
@@ -88,7 +98,7 @@ exec {'Stop':
 
 }
 
- 
+# Starts Tomcat
 exec {'Start':
  cwd => '/opt/apache-tomcat-7.0.73/bin/',
  command => 'sudo ./startup.sh',
