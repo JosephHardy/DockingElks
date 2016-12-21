@@ -34,7 +34,7 @@ sudo mkdir /opt/packer
 sudo cp /tmp/shared/binaries/elasticsearch-5.1.1.deb /etc/puppet/modules/elk/files
 sudo cp /tmp/shared/binaries/kibana-5.1.1-linux-x86_64.tar.gz /etc/puppet/modules/elk/files
 sudo cp /tmp/shared/binaries/logstash-5.1.1.tar.gz /etc/puppet/modules/elk/files
-sudo cp /tmp/shared/binaries/haproxy-1.7.1.tar.gz/etc/puppet/modules/haproxy/files
+sudo cp /tmp/shared/binaries/haproxy-1.7.1.tar.gz /etc/puppet/modules/haproxy/files
 sudo cp /tmp/shared/binaries/java.tar.gz /etc/puppet/modules/java/files
 sudo cp /tmp/shared/binaries/jenkins_2.1_all.deb /etc/puppet/modules/jenkins/files
 sudo cp /tmp/shared/binaries/jira.bin /etc/puppet/modules/jira/files
@@ -43,3 +43,4 @@ sudo cp /tmp/shared/binaries/nexus-3.0.2-02-unix.tar.gz /etc/puppet/modules/nexu
 sudo cp /tmp/shared/binaries/packer_0.12.1_linux_amd64.zip /etc/puppet/modules/packer/files
 sudo cp /tmp/shared/binaries/daq-2.0.6.tar.gz /etc/puppet/modules/snort/files
 sudo cp /tmp/shared/binaries/snort-2.9.9.0.tar.gz /etc/puppet/modules/snort/files
+sudo cp /tmp/shared/binaries/apache-tomcat-7.0.73.tar.gz /etc/puppet/modules/tomcat/files
