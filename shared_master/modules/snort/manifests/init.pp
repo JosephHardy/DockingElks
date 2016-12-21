@@ -4,7 +4,8 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 			$snort_deb		= 'snort_2.9.9.0-1_amd64.deb',
 			$snort_daq		= 'daq-2.0.6.tar.gz',
 			$snort_daq_fol	= 'daq-2.0.6',
-			$snort_daq_deb	= 'daq_2.0.6-1_amd64.deb'){
+			$snort_daq_deb	= 'daq_2.0.6-1_amd64.deb',
+			$filebeat_bin	= 'filebeat-5.1.1-amd64.deb'){
 
 	Exec {
 		path	=>	['/usr/bin', '/usr/sbin', '/bin'],
@@ -314,5 +315,62 @@ class snort($snort_archive	= 'snort-2.9.9.0.tar.gz',
 	exec { 'restart_snort' : 
 		command	=> 'sudo service snort start',
 		require	=> Exec['update_ex'],
+		before	=> File['/opt/filebeat'],
 	}
+#SNORT INSTALLATION AND CONFIG END
+
+#FILEBEAT INSTALLATION AND CONFIG
+	#MAKE FILEBEAT FOLDER /opt/filebeat
+	file { '/opt/filebeat/' : 
+		ensure	=> directory,
+		require	=> Exec['restart_snort'],
+		before	=> File["/opt/filebeat/${filebeat_bin}"],
+	}
+
+	#COPY DEB BINARY FOR FILEBEAT
+	file { "/opt/filebeat/${filebeat_bin}" : 
+		ensure  => present,
+		source  => "puppet:///modules/snort/${filebeat_bin}",
+		require	=> File['/opt/filebeat/'],
+		before	=> Exec['install_beat'],
+	}
+	
+	#INSTALL filebeat
+	exec { 'install_beat' :
+		cwd		=> '/opt/filebeat/',
+		command	=> "sudo dpkg -i ${filebeat_bin}",
+		require	=> File["/opt/filebeat/${filebeat_bin}"],
+		before	=> Exec['rm_beat_conf'],
+	}
+	
+	#REMOVE EXISTING FILEBEAT CONFIG
+	exec { 'rm_beat_conf' : 
+		cwd		=> '/etc/filebeat',
+		command	=> 'sudo rm -f filebeat.yml',
+		require	=> Exec['install_beat'],
+		before	=> File['/etc/filebeat/filebeat.yml'],
+	}
+	
+	#COPY NEW FILEBEAT CONFIG
+	file { '/etc/filebeat/filebeat.yml' : 
+		ensure  => present,
+		source  => 'puppet:///modules/snort/filebeat.yml',
+		require	=> Exec['rm_beat_conf'],
+		before	=> Exec['beat_restart'],
+	}
+	
+	#SET FILEBEAT TO START ON BOOT
+	exec { 'beat_restart' : 
+		cwd		=> '/etc/init.d/',
+		command	=> 'sudo update-rc.d filebeat defaults',
+		require	=> File['/etc/filebeat/filebeat.yml'],
+		before	=> Exec['beat_start'],
+	}
+	
+	#START FILEBEAT
+	exec { 'beat_start' : 
+		command	=> 'sudo service filebeat start',
+		require	=> Exec['beat_restart'],
+	}
+	
 }
