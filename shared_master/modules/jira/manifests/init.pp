@@ -1,23 +1,37 @@
-class jira {
-	Exec {
-		path => ["/usr/bin", "/bin", "/usr/sbin"]
+class jira(
+	$jira_bin = "jira.bin"){
+	
+	Exec{
+		path => [ "/usr/bin", "/bin", "/usr/sbin"],
 	}
 	
-	exec { 'copy jira bin' :
-		command => 'sudo cp /tmp/shared/jira.bin /opt'
+	#MAKE JIRA DIRECTORY
+	file { '/opt/jira/' : 
+	ensure	=> 'directory',
+	before	=> File["/opt/jira/${jira_bin}"],
 	}
 	
-	exec { 'change permissions' :
-		cwd => '/opt',
-		command => 'sudo chmod 755 jira.bin',
+	#COPY JIRA AND RESPONSE.VARFILE
+	file { "/opt/jira/${jira_bin}" : 
+	ensure	=> 'present',
+	source	=> "puppet:///modules/jira/${jira_bin}",
+	mode	=> 755,
+	require	=> File['/opt/jira/'],
+	before	=> File['/opt/jira/response.varfile'],
 	}
 	
-	exec { 'execute and user input' :
-		cwd => '/opt',
-		command => 'sudo printf "o\n2\n/opt/atlassian/jira\n/var/atlassian/application-data/jira\n2\n8081\n8006\ny\n" | sudo ./jira.bin',
+	file { '/opt/jira/response.varfile' : 
+	ensure	=> 'present',
+	source	=> 'puppet:///modules/jira/response.varfile',
+	mode	=> 755,
+	require	=> File["/opt/jira/${jira_bin}"],
+	before	=> Exec['install_jira'],
 	}
 
-	exec { 'echo' :
-		command => 'echo Jira has been installed',
-	}	
+	#INSTALL JIRA 
+	exec {'install_jira' : 
+	cwd		=> '/opt/jira/',
+	command	=> "sudo ./${jira_bin} -q -varfile /opt/jira/response.varfile",
+	require	=> File['/opt/jira/response.varfile'],
+	}
 }
