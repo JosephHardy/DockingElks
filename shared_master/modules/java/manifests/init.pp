@@ -5,7 +5,7 @@ class java {
         }
 
         exec { 'copy java tar file' :
-                command => 'sudo cp /tmp/shared/java.tar.gz /opt/',
+                command => 'sudo cp /etc/puppet/modules/java/files/java.tar.gz /opt/',
         }
 
         exec { 'extract java tar file' :
