@@ -3,10 +3,11 @@ class elk(
     $kibana_archive = "kibana-5.1.1-linux-x86_64.tar.gz",
     $kibana_home = "/opt/kibana-5.1.1-linux-x86_64",
     $logstash_archive = "logstash-5.1.1.tar.gz",
-    $logstash_home = "/opt/logstash-5.1.1"
+    $logstash_home = "/opt/logstash-5.1.1",
+    $elasticsearch = "es.sh"
     )
     {
-    #require java
+    require java
 
     Exec {
     	path => ["/usr/bin", "/bin", "/usr/sbin"]
@@ -15,8 +16,8 @@ class elk(
     #Install Elasticsearch first
 	file {"/opt/${elasticsearch_archive}":
         ensure => "present",
-        source => "/tmp/shared/elk/files/${elasticsearch_archive}",
-        #source => "puppet:///modules/elk/${elasticsearch_archive}",
+        #source => "/tmp/shared/elk/files/${elasticsearch_archive}",
+        source => "puppet:///modules/elk/${elasticsearch_archive}",
         owner => vagrant,
     	mode => 755,
     }
@@ -34,13 +35,12 @@ class elk(
     	require => Exec["get debian key"],
     }
 
-	file{"/opt/es.sh":
+	file {"/opt/${elasticsearch}":
         ensure => "present",
-        source => "/tmp/shared/elk/files/es.sh",
-        #source => "puppet:///modules/elk/es.sh",
+        #source => "/tmp/shared/elk/files/${elasticsearch_archive}",
+        source => "puppet:///modules/elk/${elasticsearch}",
         owner => vagrant,
-        mode => 755,
-    	require => Package['install elasticsearch'],
+    	mode => 755,
     }
 
 	exec{'update network host':
@@ -66,8 +66,8 @@ class elk(
     #Install Kibana
     file {"/opt/${kibana_archive}":
         ensure => "present",
-        source => "/tmp/shared/elk/files/${kibana_archive}",
-        #source => "puppet:///modules/elk/${kibana_archive}",
+        #source => "/tmp/shared/elk/files/${kibana_archive}",
+        source => "puppet:///modules/elk/${kibana_archive}",
         owner => vagrant,
         mode => 755,
     	require => Exec['start elasticsearch'],
@@ -81,8 +81,8 @@ class elk(
 
     file{"/opt/kibana.sh":
         ensure => "present",
-        source => "/tmp/shared/elk/files/kibana.sh",
-        #source => "puppet:///modules/elk/kibana.sh",
+        #source => "/tmp/shared/elk/files/kibana.sh",
+        source => "puppet:///modules/elk/kibana.sh",
         owner => vagrant,
         mode => 755,
     	require => Exec['unpack kibana'],
@@ -103,8 +103,8 @@ class elk(
 	#Install Logstash
 	file {"/opt/${logstash_archive}":
 		ensure => "present",
-		source => "/tmp/shared/elk/files/${logstash_archive}",	
-		#source => "puppet:///modules/elk/${logstash_archive}",
+		#source => "/tmp/shared/elk/files/${logstash_archive}",	
+		source => "puppet:///modules/elk/${logstash_archive}",
 		owner => vagrant,
 		mode => 755,
 		require => Exec['start kibana'],		
@@ -118,8 +118,8 @@ class elk(
 
 	file {"${logstash_home}/logstash.conf":
 		ensure => "present",
-		source => "/tmp/shared/elk/files/logstash.conf",
-		#source => "puppet:///modules/elk/logstash.conf",
+		#source => "/tmp/shared/elk/files/logstash.conf",
+		source => "puppet:///modules/elk/logstash.conf",
 		owner => vagrant,
 		mode => 755,
 		require => Exec['unpack logstash'],
@@ -127,7 +127,7 @@ class elk(
 
 	exec{'configure logstash':
 		cwd => "${logstash_home}",
-		command => "sudo bin/logstash -f logstash.conf"
+		command => "sudo bin/logstash -f logstash.conf",
 		require => File["${logstash_home}/logstash.conf"]
 	}
 }

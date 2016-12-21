@@ -4,11 +4,14 @@ sudo apt-get install -y openssh-server openssh-client
 
 echo "Disabling the firewall .. "
 sudo ufw disable
-sudo apt-get install -y puppet 
+sudo apt-get install -y puppet
+
+fqdn=$(facter fqdn)
+ip=$(facter ipaddress_eth1)
 
 echo "Configuring the Agent's IP Address .. "
-sed -i "1s/^/$agentIP $agentDN puppet\n/" /etc/hosts
-sed -i "1s/^/127.0.0.1 $agentDN puppet\n/" /etc/hosts
+sed -i "1s/^/$ip $fqdn puppet\n/" /etc/hosts
+sed -i "1s/^/127.0.0.1 $fqdn puppet\n/" /etc/hosts
 sed -i "1s/^/$masterIP $masterDN puppetmaster\n/" /etc/hosts
 
 echo "Configuring the the default server to master fqdn .. "

@@ -4,14 +4,17 @@ class java {
                 path => ["/usr/bin","/bin","/usr/sbin"]
         }
 
-        exec { 'copy java tar file' :
-                command => 'sudo cp /etc/puppet/modules/java/files/java.tar.gz /opt/',
-        }
-
+		file {"/opt/java.tar.gz":
+			ensure => "present",
+			source => "puppet:///modules/java/java.tar.gz",
+			owner => vagrant,
+			mode => 755,
+		}
+		
         exec { 'extract java tar file' :
                 cwd => '/opt',
                 command => 'sudo tar zxvf java.tar.gz',
-                require => Exec['copy java tar file'],
+                require => File["/opt/java.tar.gz"],
         }
 
         exec { 'install java' :

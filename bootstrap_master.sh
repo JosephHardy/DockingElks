@@ -11,7 +11,7 @@ sed -i "1s/^/$masterIP $masterDN puppetmaster\n/" /etc/hosts
 sed -i "1s/^/127.0.0.1 $masterDN puppetmaster\n/" /etc/hosts
 
 echo "Creating and configuring the site.pp file .. "
-sudo touch /etc/puppet/manifests/site.pp
+sudo cp /tmp/shared/site.pp /etc/puppet/manifests/
 # add the modules to be installed
 # over binary files
 
@@ -43,6 +43,9 @@ sudo cp /tmp/shared/binaries/nexus-3.0.2-02-unix.tar.gz /etc/puppet/modules/nexu
 sudo cp /tmp/shared/binaries/packer_0.12.1_linux_amd64.zip /etc/puppet/modules/packer/files
 sudo cp /tmp/shared/binaries/daq-2.0.6.tar.gz /etc/puppet/modules/snort/files
 sudo cp /tmp/shared/binaries/snort-2.9.9.0.tar.gz /etc/puppet/modules/snort/files
+sudo cp /tmp/shared/binaries/filebeat-5.1.1-amd64.deb /etc/puppet/modules/snort/files
+sudo cp /tmp/shared/binaries/mysql-server_5.7.16-1ubuntu16.04_amd64.deb-bundle.tar /etc/puppet/modules/snort/files
 sudo cp /tmp/shared/binaries/apache-tomcat-7.0.73.tar.gz /etc/puppet/modules/tomcat/files
+sudo cp /tmp/shared/binaries/filebeat-5.1.1-amd64.deb /etc/puppet/modules/snort/files
 
 
