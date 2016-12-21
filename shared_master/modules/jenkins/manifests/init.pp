@@ -1,5 +1,6 @@
+
 class jenkins (
-	$jenkins_archive = "jenkins_2.1_all.deb",
+        $jenkins_archive = "jenkins_2.1_all.deb",
 )
 
 {
@@ -8,14 +9,18 @@ class jenkins (
         Exec {
                 path => ["/usr/bin","/bin","/usr/sbin"]
         }
-	
-	file { "/opt/${jenkins_archive}":
-		ensure => present,
-		owner => vagrant,
-		mode => 755,
-		source => "/tmp/shared/jenkins/files/${jenkins_archive}",
-		#source => "puppet:///modules/jenkins/${jenkins_archive}",
-	}
+
+        exec{'install daemon':
+                command => 'sudo apt-get install -y daemon',
+        }
+
+        file { "/opt/${jenkins_archive}":
+                ensure => present,
+                owner => vagrant,
+                mode => 755,
+                #source => "/tmp/shared/jenkins/files/${jenkins_archive}",
+                source => "puppet:///modules/jenkins/${jenkins_archive}",
+        }
 
 #        exec { 'copy jenkins' :
 #                command => 'sudo cp /tmp/shared/jenkins_2.1_all.deb /opt',
@@ -33,11 +38,16 @@ class jenkins (
                 require => Exec['add key']
         }
 
+        exec{'install jre':
+        command => 'sudo apt-get install -f',
+        require => Package['jenkins'],
+}
+
         service { 'jenkins':
                 enable => true,
                 ensure => running,
                 hasrestart => true,
                 hasstatus => true,
-                require => Package['jenkins']
+                require => Exec['install jre']
         }
 }
