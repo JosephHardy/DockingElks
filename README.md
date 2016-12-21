@@ -21,10 +21,7 @@
 3) Git bash within the DockingElks directory and run the command 'vagrant up'
 
 
-~
-~
-~
-~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
