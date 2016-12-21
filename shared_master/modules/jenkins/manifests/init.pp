@@ -4,7 +4,7 @@ class jenkins (
 )
 
 {
-        #require java
+        require java
 
         Exec {
                 path => ["/usr/bin","/bin","/usr/sbin"]
@@ -35,19 +35,19 @@ class jenkins (
                 provider => dpkg,
                 ensure => installed,
                 source => "/opt/jenkins_2.1_all.deb",
-                require => Exec['add key']
+                require => Exec['add key'],
         }
 
-        exec{'install jre':
-        command => 'sudo apt-get install -f',
-        require => Package['jenkins'],
-}
+#        exec { 'install jre' :
+#               command => 'sudo apt-get install -f',
+#               require => Package['jenkins'],
+#       }
 
         service { 'jenkins':
                 enable => true,
                 ensure => running,
                 hasrestart => true,
                 hasstatus => true,
-                require => Exec['install jre']
+                require => Package['jenkins'],
         }
 }
