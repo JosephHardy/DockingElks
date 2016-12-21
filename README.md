@@ -19,7 +19,12 @@
 - snort-2.9.9.0.tar.gz
 
 3) Git bash within the DockingElks directory and run the command 'vagrant up'
-
+Can also launch individual machines by putting the name of the machine after the 'vagrant up' command. The machines are as follows:
+    - elkAgent: includes java and elk stack. IP: 192.168.1.100
+    - snortAgent: includes snort. IP: 192.168.1.101
+    - jiraAgent: includes java, maven, jenkins and jira. IP: 192.168.1.104
+    - packerAgent: includes java, maven, nexus and packer. IP: 192.168.1.105
+    - master: IP: 192.168.1.120
 
 ~
 ~
