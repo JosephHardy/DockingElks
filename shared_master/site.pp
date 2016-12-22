@@ -14,10 +14,10 @@ node 'snortAgent.qac.local' {
 node 'jiraAgent.qac.local' {
 	include jira
 	include jenkins
+	include tomcat
 }
 
 node 'packerAgent.qac.local'{
 	include packer
 	include nexus
-	include tomcat
 	}
