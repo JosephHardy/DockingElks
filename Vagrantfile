@@ -4,7 +4,8 @@
 #add environment variables to set up numerous agents ( domain name & IP Address)
 masterDN = "jayde-master.qac.local"
 masterIP = "192.168.1.120" #104 
-
+agentDN = "jayde-agent.qac.local"
+agentIP = "192.168.1.121"
 
 Vagrant.configure("2") do |config|
  

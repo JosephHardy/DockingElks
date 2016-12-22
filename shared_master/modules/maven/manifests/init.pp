@@ -1,6 +1,6 @@
 class maven (
-	$maven_home = "/opt/maven",
-	$maven_archive = "apache-maven-3.3.9-bin.tar.gz",
+	$maven_home = "/opt/apache-maven-3.3.9",
+	$maven_archive = "maven.tar.gz",
 	) 
 	{
 	require java
@@ -22,9 +22,9 @@ class maven (
 		require => File["/opt/${maven_archive}"]
 	}
 	exec {'install maven':
-		require => Exec ['move maven'],
+		require => Exec ['extract maven'],
 		logoutput => true,
-		command => "update-alternatives --install /usr/bin/mvn mvn ${maven_home}/bin/mvn 1"
+		command => "sudo update-alternatives --install /usr/bin/mvn mvn ${maven_home}/bin/mvn 1"
 	}
 
 }

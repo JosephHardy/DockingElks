@@ -5,7 +5,7 @@ class nexus (
 	)
 	{
 	
-	require java,
+	require java
 	require maven
 	
 	Exec {
