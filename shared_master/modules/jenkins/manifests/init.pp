@@ -2,7 +2,7 @@ class jenkins (
         $jenkins_archive = "jenkins_2.1_all.deb",
 	)
 	{
-        require java,
+        require java
 		require maven
 
         Exec {
@@ -12,6 +12,10 @@ class jenkins (
         exec{'install daemon':
                 command => 'sudo apt-get install -y daemon',
         }
+		
+		exec{'install jre-headless':
+				command => 'sudo apt-get install -y default-jre-headless',
+		}
 
         file { "/opt/${jenkins_archive}":
                 ensure => present,

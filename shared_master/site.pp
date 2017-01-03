@@ -21,3 +21,9 @@ node 'packerAgent.qac.local'{
 	include packer
 	include nexus
 	}
+		
+node 'test.qac.local'{
+	include jenkins
+	include tomcat
+	include haproxy
+	}
