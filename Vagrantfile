@@ -31,6 +31,7 @@ Vagrant.configure("2") do |config|
 		{ :name => "snortAgent", :hostname => 'snortAgent.qac.local',	:ip => '192.168.1.101', 	:ram => 2048},
 		{ :name => "jiraAgent", :hostname => 'jiraAgent.qac.local',	:ip => '192.168.1.104', 	:ram => 2048},
 		{ :name => "packerAgent", :hostname => 'packerAgent.qac.local',	:ip => '192.168.1.105', 	:ram => 2048},
+		{ :name => "testAgent", :hostname => 'test.qac.local',	:ip => '192.168.1.106', 	:ram => 4096},
 	]
 	
     agent_nodes.each do |agent|
