@@ -20,7 +20,8 @@
 
 3) Git bash within the DockingElks directory and run the command 'vagrant up' 
 
-4) To configure the monitoring for ELK stack, add the file "filebeat-5.1.1-linux-x86_64.tar.gz" to the shared_agent folder and run the filbeat.sh file in the /tmp/shared folder on the agent
+4) To configure the monitoring for ELK stack, add the following file to the shared_agent folder and run the filbeat.sh file in the "/tmp/shared" folder on the agent
+- filebeat-5.1.1-linux-x86_64.tar.gz 
 
 ### Machines can all be loaded at once with `vargant up`. Not advised as they take up 12GB Ram between them and really slow down the computer
 
