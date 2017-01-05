@@ -48,4 +48,3 @@ sudo cp /tmp/shared/binaries/mysql-server_5.7.16-1ubuntu16.04_amd64.deb-bundle.t
 sudo cp /tmp/shared/binaries/apache-tomcat-7.0.73.tar.gz /etc/puppet/modules/tomcat/files
 sudo cp /tmp/shared/binaries/filebeat-5.1.1-amd64.deb /etc/puppet/modules/snort/files
 
-
