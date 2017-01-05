@@ -29,7 +29,7 @@ sudo make install-init
 sudo make install-config
 sudo make install-commandmode
 
-sudo cp /tmp/shared/nagios.conf /etc/apache2/conf-available/nagios.conf
+sudo cp /tmp/shared/Nagios/nagios.conf /etc/apache2/conf-available/nagios.conf
 
 sudo sed -i '51s/#cfg_dir=/cfg_dir=/' /usr/local/nagios/etc/nagios.cfg
 
@@ -54,4 +54,4 @@ sudo service nagios start
 
 ln -s /etc/init.d/nagios /etc/rcS.d/S99nagios
 
-sudo cp /tmp/shared/master.cfg /usr/local/nagios/etc/servers/master.cfg
+sudo cp /tmp/shared/Nagios/elkAgent.cfg /usr/local/nagios/etc/servers/elkAgent.cfg

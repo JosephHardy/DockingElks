@@ -49,4 +49,6 @@ file { "/opt/${kibana_archive}":
 
 ### Nagios Installation
 
-Nagios can be installed on an agent by running the nagios.sh bootstrap file. Upon running this you will be prompted to create a password for the user "nagiosadmin", which you will need to view the web interface on http://<agent_ip>/nagios. By default the master instance and the agent that nagios is installed on are monitored.
+Nagios can be installed on the master by running `sudo /tmp/shared/Nagios/nagios.sh`.
+Upon running this you will be prompted to create a password for the user "nagiosadmin", which you will need to view the web interface on http://192.168.1.120/nagios. 
+By default the master instance and the Elk agent are monitored.
