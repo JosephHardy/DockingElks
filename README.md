@@ -55,3 +55,13 @@ file { "/opt/${kibana_archive}":
 Nagios can be installed on the master by running `sudo /tmp/shared/Nagios/nagios.sh`.
 Upon running this you will be prompted to create a password for the user "nagiosadmin", which you will need to view the web interface on http://192.168.1.120/nagios. 
 By default the master instance and the Elk agent are monitored.
+
+
+
+### Auto deployment from jenkins to tomcat
+
+Tutorial which outlines steps: https://www.jdev.it/deploying-your-war-file-from-jenkins-to-tomcat/
+
+
+
+
